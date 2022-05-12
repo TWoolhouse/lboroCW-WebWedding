@@ -83,6 +83,16 @@ body>aside.active {
 	display: none;
 }
 
+/* Header */
+
+body>header {
+	
+}
+
+header>nav #go {
+	display: none;
+}
+
 /* Venues */
 
 #venues {

@@ -16,19 +16,21 @@
 
 	const ajax = {
 		url: (url, params) => url + "?" + new URLSearchParams(params),
-		venues: () => fetch(ajax.url("api/venues.php", {})).then(value => value.json()),
+		venues: () => fetch(ajax.url("api/venues.php", {})).then(res => res.json()),
 		bookings: (start, end) => fetch(ajax.url("api/bookings.php", {
 			start: date_string(start),
 			end: date_string(end),
-		})).then(value => value.json()),
+		})).then(res => res.json()),
 		catering: () => fetch(ajax.url("api/catering.php", {}), {
 			importance: "low",
-		}).then(value => value.json()),
+		}).then(res => res.json()),
+		images: () => fetch(ajax.url("api/images.php", {})).then(res => res.json()),
 	};
 
 	const template = {
 		venue: "",
 		active: "",
+		credit: "",
 		day: {
 			free: "",
 			used: "",
@@ -97,6 +99,7 @@
 			guests.dispatchEvent(new Event("change"));
 			select.update.booking();
 			select.update.catering();
+			image(venue.id, view_venue);
 			pricing();
 		};
 
@@ -134,7 +137,7 @@
 			else if (current.catering === null) current.price = "Select a Catering Grade";
 			else
 				current.price =
-					"£" + (Number.parseInt(current.day.date.getDay() > 4 ? current.venue.price_wkend : current.venue.price_wkday)
+					"£" + (Number.parseInt((current.day.date.getDay() % 6 == 0) ? current.venue.price_wkend : current.venue.price_wkday)
 						+ current.guests * Number.parseInt(current.catering.cost));
 			view_venue.querySelector("#price #£").innerText = current.price;
 		};
@@ -238,6 +241,7 @@
 			this._element.id = this.id;
 			this._element.classList.add("venue");
 			this._element.innerHTML = template.venue.eval(this);
+			image(this.id, this.node());
 			this._element.addEventListener("click", () => select.venue(this));
 
 			return this._element;
@@ -286,6 +290,46 @@
 			view_venues.appendChild(venue.node());
 			venue.show();
 		}
+		return true;
+	})();
+
+	const image = (() => {
+		const store_name = "images";
+		let storage = {};
+		const pop = (async () => {
+			if (!window.localStorage.getItem(store_name) || (await ready && Object.keys(venues).length != Object.keys(JSON.parse(window.localStorage.getItem(store_name))).length)) {
+				const req = ajax.images();
+				await ready;
+				const res = await req;
+				Object.keys(venues).map((vid, index) => {
+					const obj = res.results[index];
+					storage[vid] = {
+						alt: obj.alt_description,
+						src: obj.urls.raw + "&w=300&h=300&crop=entropy&fm=jpg&fit=crop",
+						photo: obj.links.html,
+						username: obj.user.name,
+						userlink: obj.user.links.html,
+					};
+				});
+				window.localStorage.setItem(store_name, JSON.stringify(storage));
+			} else {
+				storage = JSON.parse(window.localStorage.getItem(store_name));
+			}
+		})();
+
+		return async (vid, node) => {
+			await pop;
+			const store = storage[vid];
+			const figure = node.querySelector("#img");
+
+			const img = figure.querySelector("img");
+			img.src = store.src;
+			img.alt = store.alt;
+
+			const credit = figure.querySelector("#credit");
+			credit.innerHTML = template.credit.eval(store);
+			return;
+		};
 	})();
 
 	(async () => {
@@ -297,7 +341,6 @@
 		select.update.catering();
 	})();
 
-	// TODO: MAKE DATE NOT TIME TRAVEL
 	const day = 1000 * 60 * 60 * 24;
 	input.start.valueAsDate = new Date();
 	input.end.valueAsDate = new Date(Date.now() + 13 * day);
@@ -317,6 +360,16 @@
 		select.update.booking();
 		console.log(bookings);
 	});
-	input.go.dispatchEvent(new Event("click"));
+
+	input.start.min = input.start.value;
+	input.start.addEventListener("change", () => {
+		input.end.min = input.start.value;
+		input.end.valueAsDate = new Date(input.start.valueAsDate.getTime() + 13 * day);
+		input.end.max = input.end.value;
+		input.go.dispatchEvent(new Event("click"));
+	});
+	input.end.addEventListener("change", () => input.go.dispatchEvent(new Event("click")));
+
+	input.start.dispatchEvent(new Event("change"));
 
 })();

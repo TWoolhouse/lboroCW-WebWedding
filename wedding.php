@@ -45,17 +45,11 @@
 					<figcaption class="tooltiptext">Licensed</figcaption>
 				</figure>
 				<figure id="img">
-					<img src="£{this.image}" alt="Venue Photo">
+					<img src="default.png" alt="Venue Photo">
 					<figcaption id="credit">
 						<a href="£{this.image}">Photo</a> by <a href="https://picsum.photos/">Lorem Picsum</a>
 					</figcaption>
 				</figure>
-				<!-- <footer id="credit">
-					Photo by
-					<a id="author" href="https://unsplash.com/@anniespratt?utm_source=Wedding%20Venues&utm_medium=referral">Annie Spratt</a>
-					on
-					<a id="unslpash" href="https://unsplash.com/?utm_source=Wedding%20Venues&utm_medium=referral">Unsplash</a>
-				</footer> -->
 			</section>
 
 			<section id="info">
@@ -100,18 +94,12 @@
 					<figcaption class="tooltiptext">Close</figcaption>
 				</figure>
 				<figure id="img" class="shrunk">
-					<img src="£{this.image}" alt="Venue Photo">
+					<img src="default.png" alt="Venue Photo">
 					<figcaption id="credit">
 						<a href="£{this.image}">Photo</a> by <a href="https://picsum.photos/">Lorem Picsum</a>
 					</figcaption>
 					<figcaption id="enlarge">Enlarge Image</figcaption>
 				</figure>
-				<!-- <footer id="credit">
-					Photo by
-					<a id="author" href="https://unsplash.com/@anniespratt?utm_source=Wedding%20Venues&utm_medium=referral">Annie Spratt</a>
-					on
-					<a id="unslpash" href="https://unsplash.com/?utm_source=Wedding%20Venues&utm_medium=referral">Unsplash</a>
-				</footer> -->
 			</section>
 			<section id="price">
 				<span id="£">100</span>
@@ -153,12 +141,19 @@
 			</table>
 		</template>
 
+		<template id="credit">
+			<a id="photo" href="£{this.photo}?utm_source=Wedding%20Venues&utm_medium=referral">Photo</a> by
+			<a id="author" href="£{this.userlink}?utm_source=Wedding%20Venues&utm_medium=referral">£{this.username}</a>
+			on
+			<a id="unslpash" href="https://unsplash.com/?utm_source=Wedding%20Venues&utm_medium=referral">Unsplash</a>
+		</template>
+
 		<div id="day">
 			<template id="free">
-				<td id="£{this.uid}" class="encircle tooltip free">£{this.day}<span class="tooltiptext">Available<br>£{this.date}</span></td>
+				<td id="£{this.uid}" class="encircle tooltip free">£{this.day}<span class="tooltiptext">£{this.date}</span></td>
 			</template>
 			<template id="used">
-				<td id="£{this.uid}" class="tooltip used">£{this.day}<span class="tooltiptext">Booked</span></td>
+				<td id="£{this.uid}" class="used">£{this.day}</td>
 			</template>
 			<template id="empty">
 				<td></td>
