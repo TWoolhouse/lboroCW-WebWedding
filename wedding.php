@@ -139,6 +139,9 @@
 				<tbody id="dates">
 				</tbody>
 			</table>
+			<section id="buy">
+				<button>Book!</button>
+			</section>
 		</template>
 
 		<template id="credit">
@@ -150,7 +153,7 @@
 
 		<div id="day">
 			<template id="free">
-				<td id="£{this.uid}" class="encircle tooltip free">£{this.day}<span class="tooltiptext">£{this.date}</span></td>
+				<td id="£{this.uid}" class="encircle tooltip free">£{this.day}<span class="tooltiptext">££{this.price}<br>£{this.date}</span></td>
 			</template>
 			<template id="used">
 				<td id="£{this.uid}" class="used">£{this.day}</td>

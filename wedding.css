@@ -31,9 +31,7 @@ body>header {
 	top: 0;
 	/* position: sticky; */
 	z-index: 1;
-	background-color: var(--passive);
-	background-color: grey;
-	height: var(--header-height);
+	/* height: var(--header-height); */
 }
 
 body>main {
@@ -86,7 +84,35 @@ body>aside.active {
 /* Header */
 
 body>header {
-	
+	padding: 1em;
+	background: linear-gradient(var(--highlight), var(--passive));
+}
+
+body>header h1 {
+	font-size: 3em;
+	text-align: center;
+}
+
+body>header nav {
+	display: grid;
+	justify-items: center;
+	grid-template-columns: 0.5fr 0.5fr;
+	text-align: center;
+}
+
+body>header nav label {
+	grid-row: 1;
+}
+
+body>header nav input {
+	grid-row: 2;
+	font-size: 1.6em;
+	margin: 0.25em 1em 1em 1em;
+	padding: 0.1em 1em;
+	border-radius: 20px;
+	border: solid var(--active);
+	width: 50%;
+	text-align: center;
 }
 
 header>nav #go {
@@ -165,6 +191,15 @@ header>nav #go {
 .venue #pic #credit {
 	opacity: 0.5;
 	transition: opacity 0.25s ease-in-out;
+}
+
+.venue #pic #credit a {
+	transition: text-decoration 0.2s ease-in-out;
+	text-decoration: none;
+}
+
+.venue #pic #credit a:hover {
+	text-decoration: underline dotted;
 }
 
 .venue #pic #credit:hover {
@@ -398,6 +433,23 @@ header>nav #go {
 
 #venue #catering #info .na {
 	color: var(--fade);
+}
+
+#venue #buy button {
+	width: 100%;
+	height: 3em;
+	font-size: 1em;
+	border-radius: 2em;
+	font-weight: bold;
+	box-sizing: border-box;
+	background: var(--highlight);
+	border: 0.2em solid var(--active);
+	cursor: pointer;
+	transition: border-width 0.2s ease-in-out;
+}
+
+#venue #buy button:hover {
+	border-width: 0.5em;
 }
 
 .encircle {

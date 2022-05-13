@@ -100,6 +100,9 @@
 			select.update.booking();
 			select.update.catering();
 			image(venue.id, view_venue);
+			view_venue.querySelector("#buy button").addEventListener("click", () => {
+				alert(`Congratulations on your Booking!\n@${current.venue.name} on ${current.day.date.getDate()}/${current.day.date.getMonth() + 1}/${current.day.date.getFullYear()} for ${current.price}`)
+			});
 			pricing();
 		};
 
@@ -123,6 +126,7 @@
 					day: day.date.getDate(),
 					date: `${day.date.getDate()}/${day.date.getMonth() + 1}/${day.date.getFullYear()}`,
 					uid: uid_date(day.date),
+					price: day.date.getDay() % 6 == 0 ? current.venue.price_wkend : current.venue.price_wkday,
 				}));
 
 				week.appendChild(node);
@@ -248,6 +252,7 @@
 		}
 
 		update_bookings(start, end, booked_dates) {
+			if (booked_dates == null) booked_dates = [];
 			const booked = booked_dates.map(ds => date_string(new Date(ds)));
 			const incr = day + 1000 * 60 * 60; // 1 day + 1 hour
 			this.dates = [];
@@ -354,7 +359,7 @@
 		for (const vid in venues) {
 			venues[vid].hide();
 		}
-		for (const vid in bookings) {
+		for (const vid in venues) {
 			venues[vid].update_bookings(input.start.valueAsDate, input.end.valueAsDate, bookings[vid]);
 		}
 		select.update.booking();
