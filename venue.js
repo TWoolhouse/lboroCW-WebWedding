@@ -58,7 +58,10 @@
 		go: nav.querySelector("#go"),
 		start: nav.querySelector("#start"),
 		end: nav.querySelector("#end"),
-	}
+		catering: nav.querySelector("#catering"),
+		capacity: nav.querySelector("#capacity"),
+		capacity_display: nav.querySelector("#capacity_value"),
+	};
 
 	const select = (() => {
 		let current = {
@@ -88,9 +91,9 @@
 					if (guests.valueAsNumber == NaN || guests.valueAsNumber < guests.min || guests.valueAsNumber > guests.max)
 						guests.valueAsNumber = current.guests;
 					else
-						current.guests = guests.valueAsNumber;
+						select.attendees(guests.valueAsNumber);
 				} else {
-					current.guests = guests.valueAsNumber;
+					select.attendees(guests.valueAsNumber);
 				};
 				guests.classList[current.guests > guests.max ? "add" : "remove"]("overlimit");
 				pricing();
@@ -143,7 +146,8 @@
 				current.price =
 					"£" + (Number.parseInt((current.day.date.getDay() % 6 == 0) ? current.venue.price_wkend : current.venue.price_wkday)
 						+ current.guests * Number.parseInt(current.catering.cost));
-			view_venue.querySelector("#price #£").innerText = current.price;
+			if (current.venue !== null)
+				view_venue.querySelector("#price #£").innerText = current.price;
 		};
 
 		return {
@@ -164,6 +168,24 @@
 				day.node.classList.add("active");
 				current.day = day;
 				pricing();
+			},
+			attendees: guests => {
+				current.guests = guests;
+				console.log("Guests", guests);
+				input.capacity.value = guests;
+				input.capacity_display.innerText = guests;
+				if (current.venue !== null)
+					view_venue.querySelector("#guests").value = guests;
+				pricing();
+			},
+			catering: grade => {
+				if (true) {
+					current.catering = {
+						grade: grade,
+					};
+					if (current.venue.catering.hasOwnProperty(grade))
+						select.update.catering();
+				}
 			},
 			update: {
 				booking: () => {
@@ -195,7 +217,7 @@
 						</span>`);
 						if (good)
 							child.addEventListener("click", () => {
-								if (current.catering !== null) current.catering.node.classList.remove("active");
+								if (current.catering !== null && current.catering.cost !== undefined) current.catering.node.classList.remove("active");
 								current.catering = { node: child, grade: grade, cost: current.venue.catering[grade] };
 								current.catering.node.classList.add("active");
 								pricing();
@@ -337,7 +359,7 @@
 		};
 	})();
 
-	(async () => {
+	const ready_catering = (async () => {
 		await ready;
 		const cs = await ajax.catering();
 		for (const vid in cs) {
@@ -351,7 +373,7 @@
 	input.end.valueAsDate = new Date(Date.now() + 13 * day);
 
 	// Main
-	input.go.addEventListener("click", async () => {
+	const go = async () => {
 		const req = ajax.bookings(input.start.valueAsDate, input.end.valueAsDate);
 		await ready;
 		console.log(venues);
@@ -361,19 +383,40 @@
 		}
 		for (const vid in venues) {
 			venues[vid].update_bookings(input.start.valueAsDate, input.end.valueAsDate, bookings[vid]);
+			if (venues[vid].capacity < input.capacity.valueAsNumber)
+				venues[vid].hide();
+		}
+		await ready_catering;
+		if (input.catering.value > 0) {
+			for (const vid in venues) {
+				if (!venues[vid].catering[input.catering.value])
+					venues[vid].hide();
+			}
 		}
 		select.update.booking();
 		console.log(bookings);
-	});
+	};
+	input.go.addEventListener("click", go);
 
 	input.start.min = input.start.value;
 	input.start.addEventListener("change", () => {
 		input.end.min = input.start.value;
 		input.end.valueAsDate = new Date(input.start.valueAsDate.getTime() + 13 * day);
 		input.end.max = input.end.value;
-		input.go.dispatchEvent(new Event("click"));
+		go();
 	});
-	input.end.addEventListener("change", () => input.go.dispatchEvent(new Event("click")));
+	input.end.addEventListener("change", go);
+	input.capacity.addEventListener("change", () => {
+		select.attendees(input.capacity.valueAsNumber);
+		go();
+	});
+	input.catering.addEventListener("change", () => {
+		select.catering(input.catering.value);
+		go();
+	});
+	input.capacity.addEventListener("input", () => {
+		input.capacity_display.innerText = input.capacity.value;
+	});
 
 	input.start.dispatchEvent(new Event("change"));
 

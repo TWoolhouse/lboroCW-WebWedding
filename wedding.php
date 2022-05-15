@@ -17,10 +17,30 @@
 	<header>
 		<h1>Wedding Planner</h1>
 		<nav>
-			<label for="start">Start Date</label>
-			<input type="date" name="start" id="start">
-			<label for="end">End Date</label>
-			<input type="date" name="end" id="end">
+			<div class="ipt">
+				<label for="start">Start Date</label>
+				<input type="date" name="start" id="start">
+			</div>
+			<div class="ipt">
+				<label for="end">End Date</label>
+				<input type="date" name="end" id="end">
+			</div>
+			<div class="ipt">
+				<label for="catering">Catering Grade</label>
+				<select name="catering" id="catering">
+					<option value="0">Any</option>
+					<option value="1">Grade 1</option>
+					<option value="2">Grade 2</option>
+					<option value="3">Grade 3</option>
+					<option value="4">Grade 4</option>
+					<option value="5">Grade 5</option>
+				</select>
+			</div>
+			<div class="ipt">
+				<label for="capacity">Attendees</label>
+				<input type="range" value="0" min="0" max="1000" name="capacity" id="capacity">
+				<span id="capacity_value">0</span>
+			</div>
 			<button id="go">Go</button>
 		</nav>
 	</header>

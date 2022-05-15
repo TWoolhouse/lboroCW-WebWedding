@@ -47,6 +47,7 @@ body>aside {
 	top: 0;
 	height: min-content;
 	display: none;
+	max-width: 350px;
 }
 
 body>aside.active {
@@ -94,25 +95,33 @@ body>header h1 {
 }
 
 body>header nav {
-	display: grid;
+	display: flex;
 	justify-items: center;
-	grid-template-columns: 0.5fr 0.5fr;
 	text-align: center;
+	flex-wrap: wrap;
+	flex-direction: row;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
 }
 
-body>header nav label {
-	grid-row: 1;
+nav .ipt {
+	display: flex;
+	flex-direction: column;
+	border: solid #fff4;
+	border-radius: 20px;
+	height: 4em;
+	margin: 0.5em 0.5em;
+	padding: 0.5em 0.5em;
 }
 
-body>header nav input {
-	grid-row: 2;
+nav .ipt select,
+nav .ipt input {
 	font-size: 1.6em;
-	margin: 0.25em 1em 1em 1em;
 	padding: 0.1em 1em;
 	border-radius: 20px;
-	border: solid var(--active);
-	width: 50%;
 	text-align: center;
+	border: solid var(--active);
 }
 
 header>nav #go {
@@ -459,12 +468,15 @@ header>nav #go {
 	--colour-secondary: var(--fade);
 }
 
+.encircle:hover::after {}
+
 .encircle.active {
 	--colour-main: var(--highlight);
 	--colour-secondary: var(--active);
 }
 
 .encircle::after {
+	--border-size: var(--size);
 	content: "";
 	width: var(--size);
 	height: var(--size);
