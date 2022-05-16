@@ -1,5 +1,5 @@
 <?php header('Content-type: application/json');
-include_once "../api.php";
+include_once "api.php";
 
 $sql =
 "SELECT venue.venue_id id, name name, licensed verified, capacity capacity, weekday_price price_wkday, weekend_price price_wkend, count(booking_date) \"bookings\"

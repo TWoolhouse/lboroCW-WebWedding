@@ -16,15 +16,15 @@
 
 	const ajax = {
 		url: (url, params) => url + "?" + new URLSearchParams(params),
-		venues: () => fetch(ajax.url("api/venues.php", {})).then(res => res.json()),
-		bookings: (start, end) => fetch(ajax.url("api/bookings.php", {
+		venues: () => fetch(ajax.url("api_venues.php", {})).then(res => res.json()),
+		bookings: (start, end) => fetch(ajax.url("api_bookings.php", {
 			start: date_string(start),
 			end: date_string(end),
 		})).then(res => res.json()),
-		catering: () => fetch(ajax.url("api/catering.php", {}), {
+		catering: () => fetch(ajax.url("api_catering.php", {}), {
 			importance: "low",
 		}).then(res => res.json()),
-		images: () => fetch(ajax.url("api/images.php", {})).then(res => res.json()),
+		images: () => fetch(ajax.url("api_images.php", {})).then(res => res.json()),
 	};
 
 	const template = {

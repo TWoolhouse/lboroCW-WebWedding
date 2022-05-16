@@ -1,5 +1,5 @@
 <?php header('Content-type: application/json');
-include_once "../api.php";
+include_once "api.php";
 
 $sql =
 "SELECT venue_id id, grade grade, cost cost

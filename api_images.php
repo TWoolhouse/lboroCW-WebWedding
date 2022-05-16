@@ -1,7 +1,7 @@
 <?php
 header('Content-type: application/json');
 header("Cache-Control: public");
-include_once "../api.php";
+include_once "api.php";
 
 $sql =
 "SELECT count(*) as count
